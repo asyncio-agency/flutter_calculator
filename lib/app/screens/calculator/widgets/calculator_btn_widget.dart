@@ -16,7 +16,6 @@ class CalculatorBtnWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return InkWell(
       onTap: () {
         if (onClick != null) {
@@ -25,16 +24,16 @@ class CalculatorBtnWidget extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: operationBtn ? Colors.deepOrange : Colors.grey,
+          color: operationBtn ? Colors.deepOrangeAccent : Colors.grey,
         ),
         alignment: Alignment.center,
         width: btnWidth,
         height: 78,
         child: Text(value,
-            style: const TextStyle(
+            style: TextStyle(
+                color: operationBtn ? Colors.white : Colors.black,
                 fontWeight: FontWeight.bold,
-                fontSize: 24)
-        ),
+                fontSize: 24)),
       ),
     );
   }

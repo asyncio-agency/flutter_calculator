@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            TitleSectionWidget(
+            const TitleSectionWidget(
               starNb: 12,
               mainTitle: "Toto",
               mainSubtitle: "Sub title",

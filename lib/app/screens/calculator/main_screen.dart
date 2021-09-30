@@ -31,9 +31,17 @@ class _MainScreenState extends State<MainScreen> {
     return double.tryParse(s) != null;
   }
 
+  _showErrorMsg(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Erreur : ...'),
+      backgroundColor: Colors.red,
+      duration: Duration(seconds: 1),
+    ));
+  }
+
   _calculate(String val) {
     var specialOpe = ['C', '=', 'X'];
-    if(!specialOpe.contains(val)){
+    if (!specialOpe.contains(val)) {
       setState(() {
         if (_calculatorOperation == "Pas d'opération") {
           _calculatorOperation = val;
@@ -41,7 +49,7 @@ class _MainScreenState extends State<MainScreen> {
           _calculatorOperation = _calculatorOperation + val;
         }
       });
-    }else{
+    } else {
       switch (val) {
         case "C":
           setState(() {
@@ -56,13 +64,16 @@ class _MainScreenState extends State<MainScreen> {
           break;
         case "=":
           setState(() {
-            _calculatorResult = "${_calculatorOperation.interpret()}";
-            _calculatorOperation = _calculatorResult;
+            if (double.tryParse(_calculatorResult) == 0) {
+              _calculatorResult = "${_calculatorOperation.interpret()}";
+              _calculatorOperation = _calculatorResult;
+            } else {
+              _showErrorMsg(context);
+            }
           });
           break;
       }
     }
-
   }
 
   @override
@@ -89,7 +100,9 @@ class _MainScreenState extends State<MainScreen> {
             Padding(
                 padding: const EdgeInsets.only(right: 30.0),
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/expenses');
+                  },
                   child: const Icon(
                     Icons.save,
                     color: Colors.black,
@@ -104,189 +117,185 @@ class _MainScreenState extends State<MainScreen> {
               result: double.parse(_calculatorResult),
             ),
             Expanded(
-              child: Container(
-                color: Colors.white,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    // Boucle for
-
-                    SizedBox(
-                      height: 80,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CalculatorBtnWidget(
-                            operationBtn: true,
-                            value: "C",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                          CalculatorBtnWidget(
-                            operationBtn: true,
-                            value: "(",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                          CalculatorBtnWidget(
-                            operationBtn: true,
-                            value: ")",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                          CalculatorBtnWidget(
-                            operationBtn: true,
-                            value: "/",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                        ],
-                      ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  // Boucle for
+                  SizedBox(
+                    height: 80,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CalculatorBtnWidget(
+                          operationBtn: true,
+                          value: "C",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                        CalculatorBtnWidget(
+                          operationBtn: true,
+                          value: "(",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                        CalculatorBtnWidget(
+                          operationBtn: true,
+                          value: ")",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                        CalculatorBtnWidget(
+                          operationBtn: true,
+                          value: "/",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      height: 80,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CalculatorBtnWidget(
-                            operationBtn: false,
-                            value: "7",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                          CalculatorBtnWidget(
-                            operationBtn: false,
-                            value: "8",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                          CalculatorBtnWidget(
-                            operationBtn: false,
-                            value: "9",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                          CalculatorBtnWidget(
-                            operationBtn: true,
-                            value: "X",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                        ],
-                      ),
+                  ),
+                  SizedBox(
+                    height: 80,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CalculatorBtnWidget(
+                          operationBtn: false,
+                          value: "7",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                        CalculatorBtnWidget(
+                          operationBtn: false,
+                          value: "8",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                        CalculatorBtnWidget(
+                          operationBtn: false,
+                          value: "9",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                        CalculatorBtnWidget(
+                          operationBtn: true,
+                          value: "X",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      height: 80,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CalculatorBtnWidget(
-                            operationBtn: false,
-                            value: "4",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                          CalculatorBtnWidget(
-                            operationBtn: false,
-                            value: "5",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                          CalculatorBtnWidget(
-                            operationBtn: false,
-                            value: "6",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                          CalculatorBtnWidget(
-                            operationBtn: true,
-                            value: "-",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                        ],
-                      ),
+                  ),
+                  SizedBox(
+                    height: 80,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CalculatorBtnWidget(
+                          operationBtn: false,
+                          value: "4",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                        CalculatorBtnWidget(
+                          operationBtn: false,
+                          value: "5",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                        CalculatorBtnWidget(
+                          operationBtn: false,
+                          value: "6",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                        CalculatorBtnWidget(
+                          operationBtn: true,
+                          value: "-",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      height: 80,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CalculatorBtnWidget(
-                            operationBtn: false,
-                            value: "1",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                          CalculatorBtnWidget(
-                            operationBtn: false,
-                            value: "2",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                          CalculatorBtnWidget(
-                            operationBtn: false,
-                            value: "3",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                          CalculatorBtnWidget(
-                            operationBtn: true,
-                            value: "+",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                        ],
-                      ),
+                  ),
+                  SizedBox(
+                    height: 80,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CalculatorBtnWidget(
+                          operationBtn: false,
+                          value: "1",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                        CalculatorBtnWidget(
+                          operationBtn: false,
+                          value: "2",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                        CalculatorBtnWidget(
+                          operationBtn: false,
+                          value: "3",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                        CalculatorBtnWidget(
+                          operationBtn: true,
+                          value: "+",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      height: 80,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CalculatorBtnWidget(
-                            operationBtn: false,
-                            value: "0",
-                            btnWidth: 193,
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                          CalculatorBtnWidget(
-                            operationBtn: false,
-                            value: ".",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                          CalculatorBtnWidget(
-                            operationBtn: true,
-                            value: "=",
-                            onClick: (value) {
-                              _calculate(value);
-                            },
-                          ),
-                        ],
-                      ),
+                  ),
+                  SizedBox(
+                    height: 80,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CalculatorBtnWidget(
+                          operationBtn: false,
+                          value: "0",
+                          btnWidth: 193,
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                        CalculatorBtnWidget(
+                          operationBtn: false,
+                          value: ".",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                        CalculatorBtnWidget(
+                          operationBtn: true,
+                          value: "=",
+                          onClick: (value) {
+                            _calculate(value);
+                          },
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             )
           ],

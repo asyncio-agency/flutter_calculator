@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_calculator/app/screens/home_screen.dart';
-import 'package:smart_calculator/app/screens/calculator/main_screen.dart';
-import 'package:smart_calculator/app/screens/splash_screen.dart';
-
+import 'package:smart_calculator/routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +16,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      home: const MainScreen(title: 'Jzano Calculator'),
+
+      initialRoute: '/',
+      routes: customRoutes,
     );
   }
 }

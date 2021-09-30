@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                const Image(image: AssetImage('assets/images/splash.png')),
+                Image.asset('/splash.png'),
                 const Text(
                   "Ma \n calculatrice",
                   style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
