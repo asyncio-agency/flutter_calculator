@@ -32,7 +32,8 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   _calculate(String val) {
-    if (isNumeric(val)) {
+    var specialOpe = ['C', '=', 'X'];
+    if(!specialOpe.contains(val)){
       setState(() {
         if (_calculatorOperation == "Pas d'opération") {
           _calculatorOperation = val;
@@ -40,7 +41,7 @@ class _MainScreenState extends State<MainScreen> {
           _calculatorOperation = _calculatorOperation + val;
         }
       });
-    } else {
+    }else{
       switch (val) {
         case "C":
           setState(() {
@@ -48,39 +49,9 @@ class _MainScreenState extends State<MainScreen> {
             _calculatorResult = "0";
           });
           break;
-        case "+":
-          setState(() {
-            _calculatorOperation = _calculatorOperation + val;
-          });
-          break;
-        case "-":
-          setState(() {
-            _calculatorOperation = _calculatorOperation + val;
-          });
-          break;
         case "X":
           setState(() {
             _calculatorOperation = _calculatorOperation + "*";
-          });
-          break;
-        case "/":
-          setState(() {
-            _calculatorOperation = _calculatorOperation + val;
-          });
-          break;
-        case ".":
-          setState(() {
-            _calculatorOperation = _calculatorOperation + val;
-          });
-          break;
-        case "(":
-          setState(() {
-            _calculatorOperation = _calculatorOperation + val;
-          });
-          break;
-        case ")":
-          setState(() {
-            _calculatorOperation = _calculatorOperation + val;
           });
           break;
         case "=":
@@ -91,6 +62,7 @@ class _MainScreenState extends State<MainScreen> {
           break;
       }
     }
+
   }
 
   @override
