@@ -11,16 +11,16 @@ class ExpenseLocalDatasource {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
 
-    final file = File('${appDocPath}/calculator_cache_expenses');
+    final file = File('$appDocPath/calculator_cache_expenses');
     var data = items.map((e) => e.toJson()).toList();
-    print("DATA : ${data}");
+    print("DATA : $data");
     await file.writeAsString(jsonEncode(data));
   }
 
   Future<List<ExpenseItem>> retrieve() async{
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
-    final file = File('${appDocPath}/calculator_cache_expenses');
+    final file = File('$appDocPath/calculator_cache_expenses');
     var items = await json.decode(await file.readAsString());
     var data = items.map((e) => e.fromJson(items)).toList();
     return json.decode(data);
@@ -31,7 +31,7 @@ class ExpenseLocalDatasource {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
 
-    final file = File('${appDocPath}/calculator_cache_expenses');
+    final file = File('$appDocPath/calculator_cache_expenses');
     file.delete();
   }
 }
