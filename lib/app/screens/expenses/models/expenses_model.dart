@@ -4,5 +4,27 @@ class ExpenseItem {
   final double amount;
   final String? type;
 
-  ExpenseItem(this.name, this.date, this.amount, {this.type});
+  ExpenseItem(
+      {required this.name,
+      required this.date,
+      required this.amount,
+      this.type});
+
+  factory ExpenseItem.fromJson(Map<String, dynamic> data) {
+    return ExpenseItem(
+      name: data['name'],
+      date: DateTime.parse(data['date']),
+      amount: double.tryParse(data['amount'].toString()) ?? 0,
+      type: data['type'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "name": this.name,
+      "date": this.date.toIso8601String(),
+      "amount": this.amount,
+      "type": this.type
+    };
+  }
 }

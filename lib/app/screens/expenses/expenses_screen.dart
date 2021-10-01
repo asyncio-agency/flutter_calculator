@@ -22,7 +22,7 @@ class _ExpensesScreenState extends State<ExpensesScreen>
     BlocProvider.of<ExpenseBloc>(context).add(LoadExpenseItems());
   }
 
-  _refresh(){
+  _refresh() {
     BlocProvider.of<ExpenseBloc>(context).add(LoadExpenseItems());
   }
 
@@ -48,12 +48,14 @@ class _ExpensesScreenState extends State<ExpensesScreen>
         ),
       ),
       body: RefreshIndicator(
-        onRefresh: () async{
+        onRefresh: () async {
           _refresh();
         },
-        child: BlocConsumer<ExpenseBloc, ExpenseState>(listener: (context, state) {
+        child:
+            BlocConsumer<ExpenseBloc, ExpenseState>(listener: (context, state) {
           if (state is ExpenseItemsError) {
-            const snackBar = SnackBar(content: Text('Erreur de chargement ...'));
+            const snackBar =
+                SnackBar(content: Text('Erreur de chargement ...'));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         }, builder: (context, state) {
@@ -66,6 +68,7 @@ class _ExpensesScreenState extends State<ExpensesScreen>
                     name: state.items[index].name,
                     date: state.items[index].date,
                     amount: state.items[index].amount,
+                    type: state.items[index].type,
                   );
                 });
           } else if (state is ExpenseItemsLoading) {

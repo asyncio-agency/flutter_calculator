@@ -3,11 +3,12 @@ import 'package:intl/intl.dart';
 
 class ExpenseItemWidget extends StatelessWidget {
   final String name;
+  final String? type;
   final DateTime date;
   final double amount;
 
   const ExpenseItemWidget(
-      {Key? key, required this.name, required this.date, required this.amount})
+      {Key? key, required this.name, required this.date, required this.amount, this.type})
       : super(key: key);
 
   @override
@@ -30,6 +31,21 @@ class ExpenseItemWidget extends StatelessWidget {
                   name,
                   style: TextStyle(
                       fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: amount < 100 ? Colors.black : Colors.amber[600]),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  type ?? "Pas de type",
+                  style: TextStyle(
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: amount < 100 ? Colors.black : Colors.amber[600]),
                 ),

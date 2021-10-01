@@ -24,13 +24,10 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
         yield ExpenseItemsLoaded(results);
       }
       yield ExpenseItemsLoading();
-
       try {
-        // Traitement de récupération
-        var results = await expenseRepository.retrieve();
-        await Future.delayed(const Duration(seconds: 2));
-        yield ExpenseItemsLoaded(results);
+        yield ExpenseItemsLoaded(await expenseRepository.retrieve());
       } catch (e) {
+        print("Error");
         yield ExpenseItemsError(e);
       }
     } else if (event is AddExpenseItem) {

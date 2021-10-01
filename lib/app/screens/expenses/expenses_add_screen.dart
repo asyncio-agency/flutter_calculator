@@ -94,8 +94,8 @@ class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
                     // Validate returns true if the form is valid, or false otherwise.
                     if (_formKey.currentState!.validate()) {
                       // Ajout d'un item
-                      var item = ExpenseItem(_titleController.text,
-                          DateTime.now(), double.parse(_amountController.text),
+                      var item = ExpenseItem(name:_titleController.text,
+                          date:DateTime.now(), amount:double.parse(_amountController.text),
                           type: _selectedLocation);
 
                       BlocProvider.of<ExpenseBloc>(context).add(AddExpenseItem(item));
@@ -105,7 +105,7 @@ class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                             content: Text(
-                                "Ajout d'une dépense ${item.type}(${item.name}) en cours d'un montant de ${item.amount.toStringAsFixed(2)} €")),
+                                "Dépense ${item.type}(${item.name}) d'un montant de ${item.amount.toStringAsFixed(2)} € ajoutée")),
                       );
                       Navigator.of(context).pop();
 
