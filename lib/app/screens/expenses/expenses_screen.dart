@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_calculator/app/modules/expenses/bloc/expense_bloc.dart';
 import 'package:smart_calculator/app/screens/expenses/models/expenses_model.dart';
 import 'package:smart_calculator/app/screens/expenses/widgets/expense_item_widget.dart';
+import 'package:after_layout/after_layout.dart';
 
 class ExpensesScreen extends StatefulWidget {
   const ExpensesScreen({Key? key}) : super(key: key);
@@ -9,22 +12,18 @@ class ExpensesScreen extends StatefulWidget {
   _ExpensesScreenState createState() => _ExpensesScreenState();
 }
 
-class _ExpensesScreenState extends State<ExpensesScreen> {
+class _ExpensesScreenState extends State<ExpensesScreen>
+    with AfterLayoutMixin<ExpensesScreen> {
   List<ExpenseItem> entries = [];
 
   @override
-  void initState() {
-    entries = [
-      ExpenseItem("Item 1", DateTime.now(), 145.0),
-      ExpenseItem("Item 2", DateTime.now(), 90.0),
-      ExpenseItem("Item 3", DateTime.now(), 80.0),
-      ExpenseItem("Item 4", DateTime.now(), 200.0),
-      ExpenseItem("Item 5", DateTime.now(), 12.0),
-      ExpenseItem("Item 6", DateTime.now(), 999.0),
-      ExpenseItem("Item 7", DateTime.now(), 98.0),
-      ExpenseItem("Item 8", DateTime.now(), 100.0),
-    ];
-    super.initState();
+  void afterFirstLayout(BuildContext context) {
+    // Calling the same function "after layout" to resolve the issue.
+    BlocProvider.of<ExpenseBloc>(context).add(LoadExpenseItems());
+  }
+
+  _refresh(){
+    BlocProvider.of<ExpenseBloc>(context).add(LoadExpenseItems());
   }
 
   @override
@@ -38,25 +37,49 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        actions: [
+          IconButton(
+              onPressed: () => Navigator.pushNamed(context, '/expenses-add'),
+              icon: const Icon(Icons.add, color: Colors.black))
+        ],
         title: const Text(
           "Historique de dépenses",
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: ListView.builder(
-          padding: const EdgeInsets.all(8),
-          itemCount: entries.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ExpenseItemWidget(
-              name: entries[index].name,
-              date: entries[index].date,
-              amount: entries[index].amount,
-            );
-          }),
+      body: RefreshIndicator(
+        onRefresh: () async{
+          _refresh();
+        },
+        child: BlocConsumer<ExpenseBloc, ExpenseState>(listener: (context, state) {
+          if (state is ExpenseItemsError) {
+            const snackBar = SnackBar(content: Text('Erreur de chargement ...'));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+        }, builder: (context, state) {
+          if (state is ExpenseItemsLoaded) {
+            return ListView.builder(
+                padding: const EdgeInsets.all(8),
+                itemCount: state.items.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ExpenseItemWidget(
+                    name: state.items[index].name,
+                    date: state.items[index].date,
+                    amount: state.items[index].amount,
+                  );
+                });
+          } else if (state is ExpenseItemsLoading) {
+            return const Text("Chargement en cours ...");
+          } else {
+            return const Text("Pas de données");
+          }
+        }),
+      ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.refresh),
         onPressed: () {
-          Navigator.pushNamed(context, '/expenses-add');
+          _refresh();
+          //Navigator.pushNamed(context, '/expenses-add');
         },
       ),
     );

@@ -57,7 +57,7 @@ class ExpenseItemWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  amount.toString(),
+                  "${amount.toStringAsFixed(2)} €",
                   style: TextStyle(
                       fontSize: 33,
                       fontWeight: FontWeight.bold,

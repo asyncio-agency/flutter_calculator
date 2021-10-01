@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_calculator/app/modules/expenses/bloc/expense_bloc.dart';
 import 'package:smart_calculator/app/widgets/title_section_widget.dart';
 
 import 'models/expenses_model.dart';
@@ -15,6 +17,8 @@ class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
+  final List<String> _expenseType = ['Facture', 'Restaurant', 'Internet'];
+  String _selectedLocation = 'Facture';
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +52,7 @@ class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
                   decoration: const InputDecoration(labelText: "Titre"),
                   // The validator receives the text that the user has entered.
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (value == null || value.isEmpty || value.length < 3) {
                       return 'Veuillez saisir un titre';
                     }
                     return null;
@@ -60,26 +64,51 @@ class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'saisie obligatoire ...';
+                      return 'Montant obligatoire ...';
                     }
                     if (double.tryParse(value) == null) {
-                      return 'Veuillez saisir un prix';
+                      return 'Veuillez saisir un montant valide';
                     }
                     return null;
                   },
+                ),
+                DropdownButton(
+                  hint: const Text('Veuillez choisir un type de dépense'),
+                  // Not necessary for Option 1
+                  value: _selectedLocation,
+
+                  onChanged: (val) {
+                    setState(() {
+                      _selectedLocation = val.toString();
+                    });
+                  },
+                  items: _expenseType.map((type) {
+                    return DropdownMenuItem(
+                      child: Text(type),
+                      value: type,
+                    );
+                  }).toList(),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     // Validate returns true if the form is valid, or false otherwise.
                     if (_formKey.currentState!.validate()) {
                       // Ajout d'un item
-                      var item = ExpenseItem(_titleController.text, DateTime.now(), double.parse(_amountController.text));
+                      var item = ExpenseItem(_titleController.text,
+                          DateTime.now(), double.parse(_amountController.text),
+                          type: _selectedLocation);
+
+                      BlocProvider.of<ExpenseBloc>(context).add(AddExpenseItem(item));
+                      _titleController.text = "";
+                      _amountController.text = "";
                       // Message
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                             content: Text(
-                                'Ajout de ${item.name} en cours ...')),
+                                "Ajout d'une dépense ${item.type}(${item.name}) en cours d'un montant de ${item.amount.toStringAsFixed(2)} €")),
                       );
+                      Navigator.of(context).pop();
+
                     }
                   },
                   child: const Text('Valider'),
